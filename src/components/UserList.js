@@ -8,6 +8,7 @@ function UserList() {
     const [users, setUsers] = useState([])
     const [show, setShow] = useState(false)
     const [selectedUser, setSelectedUser] = useState({})
+
     useEffect(() => {
         let dataURL = `https://jsonplaceholder.typicode.com/users`
         Axios.get(dataURL).then((response) => {
@@ -21,6 +22,14 @@ function UserList() {
         setShow(true)
         setSelectedUser(user)
     }
+    let handleSave = (depart) => {
+        setSelectedUser(prevState => {
+            return {
+                ...prevState,
+                department: depart
+            }
+        })
+    }
    
 console.log(username)
     return (
@@ -32,7 +41,7 @@ console.log(username)
             {users ? <React.Fragment>
                 <div className='container'>
                 {
-                    users.filter(user => user.name.includes(username) || username === '')
+                    users.filter(user => user.name.toLowerCase().includes(username) || username === '')
                     .map(user => {
                         return (
                             <>
@@ -50,7 +59,7 @@ console.log(username)
             </div>
             </React.Fragment> : null}
             {
-             show && <Modal selectedUser={selectedUser} onClose={() => setShow(false)} show={show}>
+             show && <Modal selectedUser={selectedUser} handleSave={handleSave} onClose={() => setShow(false)} show={show}>
              <p>This is modal content</p>
              </Modal> 
             }
